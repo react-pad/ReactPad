@@ -7,7 +7,8 @@ import {
   LayoutDashboard,
   PlusSquare,
   Rocket,
-  ThumbsUp
+  ThumbsUp,
+  Coins
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,6 +16,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { name: "Dashboard", href: "/dashboard/user", icon: LayoutDashboard },
   { name: "Launchpad", href: "/projects", icon: Rocket },
+  { name: "Markets", href: "/markets", icon: Coins },
   { name: "Staking", href: "/staking", icon: Gem },
   { name: "Voting", href: "/voting", icon: ThumbsUp },
 ];
@@ -71,7 +73,7 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 px-6">
+        <nav className="flex-1 px-6 mt-6">
           <ul className="space-y-3">
             {navItems.map((item) => {
               const isActive = pathname === item.href;

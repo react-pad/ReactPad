@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { baseSepolia } from "viem/chains";
 import { wagmiAdapterConfig } from "@/lib/web3";
+import { ThemeProvider } from "next-themes";
 
 export function Providers({ children }: { children: React.ReactNode; }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -20,28 +21,30 @@ export function Providers({ children }: { children: React.ReactNode; }) {
   }
 
   return (
-    <PrivyProvider
-      appId={privyAppId}
-      config={{
-        loginMethods: ["email", "wallet", "sms", "google", "apple", "twitter"],
-        appearance: {
-          theme: "light",
-          accentColor: "#7DF9FF",
-        },
-        embeddedWallets: {
-          ethereum: {
-            createOnLogin: "users-without-wallets",
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <PrivyProvider
+        appId={privyAppId}
+        config={{
+          loginMethods: ["email", "wallet", "sms", "google", "apple", "twitter"],
+          appearance: {
+            theme: "light",
+            accentColor: "#7DF9FF",
           },
-        },
-        defaultChain: baseSepolia,
-        supportedChains: [baseSepolia],
-      }}
-    >
-      <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiAdapterConfig}>
-          {children}
-        </WagmiProvider>
-      </QueryClientProvider>
-    </PrivyProvider>
+          embeddedWallets: {
+            ethereum: {
+              createOnLogin: "users-without-wallets",
+            },
+          },
+          defaultChain: baseSepolia,
+          supportedChains: [baseSepolia],
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <WagmiProvider config={wagmiAdapterConfig}>
+            {children}
+          </WagmiProvider>
+        </QueryClientProvider>
+      </PrivyProvider>
+    </ThemeProvider>
   );
 }

@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { ProjectParticipation } from "@/components/project-participation";
 
 const projects = [
   {
@@ -54,11 +53,10 @@ export async function generateStaticParams() {
   }));
 }
 
-type ProjectDetailPageParams = Promise<{ id: string }>;
-
 interface ProjectDetailPageProps {
-  params: ProjectDetailPageParams;
-  // Other props if any, e.g., searchParams: Promise<any>;
+  params: Promise<{
+    id: string;
+  }>;
 }
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
@@ -70,7 +68,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 text-black">
       {/* Header */}
       <section className="mb-12">
         <h1 className="text-5xl font-bold mb-2">{project.name}</h1>
@@ -79,8 +77,8 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left Column */}
-        <div className="lg:col-span-2">
-          <Card className="mb-8">
+        <div className="lg:col-span-2 space-y-8">
+          <Card>
             <CardHeader>
               <CardTitle>Project Description</CardTitle>
             </CardHeader>
@@ -89,26 +87,8 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Buy Tokens</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">Your Allocation</span>
-                  <span className="font-bold">1,000 TKN</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <Input type="number" placeholder="Amount to buy" className="flex-grow" />
-                  <Button>Buy</Button>
-                </div>
-                <p className="text-xs text-gray-500">
-                  Gas estimate: 0.002 ETH. You will receive approximately 995 TKN.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <ProjectParticipation project={project} />
+
         </div>
 
         {/* Right Column */}

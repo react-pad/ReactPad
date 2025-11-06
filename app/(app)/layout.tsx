@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import "../globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 
 export const metadata: Metadata = {
@@ -14,6 +15,9 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Sidebar>{children}</Sidebar>
+    <Sidebar>
+      {children}
+      <Toaster />
+      </Sidebar>
   );
 }

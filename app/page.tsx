@@ -8,7 +8,7 @@ export default function Home() {
         <section className="mb-32">
           <div className="flex items-center gap-3 mb-8">
             <span className="text-sm font-black tracking-wider bg-[#FF00F5] border-4 border-black px-4 py-2 uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              BETA
+              REACTPAD
             </span>
           </div>
           <h1 className="text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none mb-8 tracking-tight">
@@ -16,7 +16,7 @@ export default function Home() {
             MOON PROJECTS.
           </h1>
           <p className="text-2xl md:text-3xl mb-12 max-w-2xl font-bold">
-            Discover, back, and launch the most promising projects in crypto.
+            Discover, back, and launch the most promising projects on the Reactive Network.
           </p>
           <Link
             href="/projects"
