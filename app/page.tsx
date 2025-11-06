@@ -1,0 +1,71 @@
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-[#FFF9F0] text-black">
+      <div className="container mx-auto px-6 py-20 max-w-7xl">
+        {/* Hero Section */}
+        <section className="mb-32">
+          <div className="flex items-center gap-3 mb-8">
+            <span className="text-sm font-black tracking-wider bg-[#FF00F5] border-4 border-black px-4 py-2 uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              BETA
+            </span>
+          </div>
+          <h1 className="text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none mb-8 tracking-tight">
+            LAUNCH IDEAS.<br />
+            MOON PROJECTS.
+          </h1>
+          <p className="text-2xl md:text-3xl mb-12 max-w-2xl font-bold">
+            Discover, back, and launch the most promising projects in crypto.
+          </p>
+          <Link
+            href="/projects"
+            className="inline-block bg-[#7DF9FF] text-black font-black py-5 px-12 text-lg border-4 border-black uppercase tracking-wider shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+          >
+            EXPLORE PROJECTS →
+          </Link>
+        </section>
+
+        {/* Stats Section */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+          <div className="bg-[#7DF9FF] border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+            <p className="text-sm font-black tracking-wider mb-4 uppercase">Total Projects</p>
+            <p className="text-6xl font-black">42</p>
+          </div>
+          <div className="bg-[#2FFF2F] border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+            <p className="text-sm font-black tracking-wider mb-4 uppercase">Total Raised</p>
+            <p className="text-6xl font-black">$12.3M</p>
+          </div>
+          <div className="bg-[#FF00F5] border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+            <p className="text-sm font-black tracking-wider mb-4 uppercase">Top Backers</p>
+            <p className="text-6xl font-black">1,234</p>
+          </div>
+        </section>
+
+        {/* Featured Projects Section */}
+        <section>
+          <h2 className="text-5xl md:text-6xl font-black uppercase mb-16 tracking-tight">
+            FEATURED LAUNCHES
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-[#7DF9FF] border-4 border-black p-8 cursor-pointer shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+              <h3 className="text-2xl font-black uppercase mb-4">PROJECT ALPHA</h3>
+              <p className="font-bold text-lg mb-6">A revolutionary new DeFi protocol.</p>
+              <span className="text-sm font-black uppercase">LEARN MORE →</span>
+            </div>
+            <div className="bg-[#FF4911] border-4 border-black p-8 cursor-pointer shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+              <h3 className="text-2xl font-black uppercase mb-4">PROJECT BETA</h3>
+              <p className="font-bold text-lg mb-6">The next generation of NFT marketplace.</p>
+              <span className="text-sm font-black uppercase">LEARN MORE →</span>
+            </div>
+            <div className="bg-[#3300FF] border-4 border-black p-8 cursor-pointer shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 text-white">
+              <h3 className="text-2xl font-black uppercase mb-4">PROJECT GAMMA</h3>
+              <p className="font-bold text-lg mb-6">A decentralized social media platform.</p>
+              <span className="text-sm font-black uppercase">LEARN MORE →</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
