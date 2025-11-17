@@ -66,7 +66,7 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
             </div>
             <div>
               <div className="text-3xl font-black">4,500</div>
-              <div className="text-sm font-black uppercase mt-1">WMTX</div>
+              <div className="text-sm font-black uppercase mt-1">REACT</div>
               <div className="text-xs font-bold mt-1">~$300</div>
             </div>
           </div>
