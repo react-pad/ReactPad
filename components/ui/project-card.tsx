@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export interface Project {
     id: string;
@@ -65,16 +65,19 @@ export function ProjectCard({ project }: { project: Project }) {
             <div className={`absolute top-0 right-0 w-4 h-4 border-2 border-black ${getStatusColor()}`}></div>
 
             <div className="flex items-center space-x-4 mb-6">
-                <Image
-                    src={project.logo}
-                    alt={`${project.name} logo`}
-                    className="w-16 h-16 border-2 border-black"
-                    width={64}
-                    height={64}
-                />
-                <div>
-                    <h3 className="text-2xl font-black uppercase tracking-tight">{project.name}</h3>
-                    <p className="text-sm font-bold mt-1">{project.website}</p>
+                <div className="border-2 border-black rounded-full p-1 bg-white">
+                    <Avatar className="w-14 h-14 border-2 border-black rounded-full">
+                        <AvatarImage src={project.logo} alt={`${project.name} logo`} />
+                        <AvatarFallback className="text-lg font-black uppercase">
+                            {project.name.slice(0, 2)}
+                        </AvatarFallback>
+                    </Avatar>
+                </div>
+                <div className="min-w-0">
+                    <h3 className="text-2xl font-black uppercase tracking-tight leading-tight break-words">
+                        {project.name}
+                    </h3>
+                    <p className="text-sm font-bold mt-1 truncate">{project.website}</p>
                 </div>
             </div>
 

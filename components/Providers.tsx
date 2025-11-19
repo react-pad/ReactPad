@@ -15,14 +15,29 @@ export function Providers({ children }: { children: React.ReactNode; }) {
   const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
   if (!privyAppId) {
-    throw new Error(
-      "Error: NEXT_PUBLIC_PRIVY_APP_ID is not set. Please set it in your .env.local file."
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: 'black',
+          color: 'red',
+          fontFamily: 'monospace',
+          fontSize: '20px',
+          padding: '20px'
+        }}
+      >
+        Error: NEXT_PUBLIC_PRIVY_APP_ID is not set. Please set it in your .env.local file.
+      </div>
     );
   }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <PrivyProvider
+        key={privyAppId}
         appId={privyAppId}
         config={{
           loginMethods: ["email", "wallet"],

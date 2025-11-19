@@ -23,7 +23,7 @@ const navItems = [
 
 const bottomItems = [
   { name: "Support", href: "/support", icon: HelpCircle },
-  { name: "Docs", href: "/docs", icon: BookOpen },
+  { name: "Docs", href: "https://reactpad.gitbook.io/", icon: BookOpen },
 ];
 
 export function Sidebar({ children }: { children: React.ReactNode; }) {
@@ -41,8 +41,8 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
   const isConnected = authenticated && !!address;
 
   return (
-    <div className="flex h-screen bg-[#FFF9F0]">
-      <div className="flex flex-col w-72 h-full bg-white border-r-4 border-black">
+    <div className="flex h-screen bg-[#FFF9F0] text-black">
+      <div className="flex flex-col w-72 h-full bg-white border-r-4 border-black overflow-y-auto">
         {/* Logo */}
         <div className="p-8 border-b-4 border-black bg-[#7DF9FF]">
           <Link href="/" className="text-2xl font-black uppercase tracking-tight">
@@ -69,6 +69,13 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
               <div className="text-sm font-black uppercase mt-1">REACT</div>
               <div className="text-xs font-bold mt-1">~$300</div>
             </div>
+            <button
+              onClick={logout}
+              type="button"
+              className="w-full mt-4 bg-red-500 text-white font-black uppercase text-xs tracking-wider border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all px-2 py-2"
+            >
+              DISCONNECT
+            </button>
           </div>
         )}
 
@@ -118,6 +125,8 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
                 <li key={item.name}>
                   <Link
                     href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={`flex items-center px-3 py-2 transition-all font-bold uppercase text-xs tracking-wider border-2 ${isActive
                       ? "bg-black text-white border-black"
                       : "border-transparent hover:bg-black hover:text-white hover:border-black"
@@ -140,19 +149,6 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
                 className="w-full bg-[#7DF9FF] text-black font-black uppercase text-xs tracking-wider border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all px-4 py-4"
               >
                 CONNECT WALLET
-              </button>
-            </div>
-          )}
-
-          {/* Logout Button for connected users */}
-          {isConnected && (
-            <div className="mt-4">
-              <button
-                onClick={logout}
-                type="button"
-                className="w-full bg-red-500 text-white font-black uppercase text-xs tracking-wider border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all px-4 py-4"
-              >
-                DISCONNECT
               </button>
             </div>
           )}
