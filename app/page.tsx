@@ -1,14 +1,23 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#FFF9F0] text-black">
-      <div className="container mx-auto px-6 py-20 max-w-7xl">
+      <div className="container mx-auto px-6 py-7 max-w-7xl">
         {/* Hero Section */}
         <section className="mb-32">
           <div className="flex items-center gap-3 mb-8">
-            <span className="text-sm font-black tracking-wider bg-[#FF00F5] border-4 border-black px-4 py-2 uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <span className="flex items-center gap-2 text-sm font-black tracking-wider bg-[#FF00F5] border-4 border-black px-4 py-2 uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               REACTPAD
+              <Image
+                src="https://res.cloudinary.com/dma1c8i6n/image/upload/v1764289640/reactpad_swlsov.png"
+                alt="ReactPad Logo"
+                width={40}
+                height={40}
+                className="object-contain"
+                priority
+              />
             </span>
           </div>
           <h1 className="text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none mb-8 tracking-tight">

@@ -11,6 +11,7 @@ import {
   Coins
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const navItems = [
@@ -44,15 +45,22 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
     <div className="flex h-screen bg-[#FFF9F0] text-black">
       <div className="flex flex-col w-72 h-full bg-white border-r-4 border-black overflow-y-auto">
         {/* Logo */}
-        <div className="p-8 border-b-4 border-black bg-[#7DF9FF]">
-          <Link href="/" className="text-2xl font-black uppercase tracking-tight">
-            REACTPAD
+        <div className="p-1 border-b-4 border-black bg-[#7DF9FF] flex items-center justify-center">
+          <Link href="/" className="flex items-center justify-center">
+            <Image
+              src="https://res.cloudinary.com/dma1c8i6n/image/upload/v1764289640/reactpad_swlsov.png"
+              alt="ReactPad Logo"
+              width={60}
+              height={60}
+              className="object-contain"
+              priority
+            />
           </Link>
         </div>
 
         {/* Wallet Info */}
         {isConnected && (
-          <div className="mx-6 my-6 p-4 border-4 border-black bg-[#2FFF2F] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div className="mx-6 my-3 p-4 border-4 border-black bg-[#2FFF2F] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-black border-2 border-black"></div>
@@ -102,7 +110,7 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
           </ul>
 
           {/* Create Project Button - Highlighted */}
-          <div className="mt-8">
+          <div className="mt-8 mb-3">
             <Link
               href="/dashboard/create"
               className={`flex items-center justify-center w-full px-4 py-4 transition-all font-black uppercase text-xs tracking-wider border-4 border-black ${pathname === "/dashboard/create"
