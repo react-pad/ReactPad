@@ -1,11 +1,10 @@
 "use client";
 import { REACT_TOKEN_ADDRESS, REACT_TOKEN_PRICE_USD } from "@/lib/constants";
+import { reactiveMainnet } from "@/lib/web3";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import {
-  BookOpen,
   Coins,
   Gem,
-  HelpCircle,
   LayoutDashboard,
   PlusSquare,
   Rocket,
@@ -15,7 +14,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount, useBalance, useDisconnect, useSwitchChain } from "wagmi";
-import { reactiveMainnet } from "@/lib/web3";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard/user", icon: LayoutDashboard },
@@ -23,11 +21,6 @@ const navItems = [
   { name: "Markets", href: "/markets", icon: Coins },
   { name: "Staking", href: "/staking", icon: Gem },
   { name: "Voting", href: "/voting", icon: ThumbsUp },
-];
-
-const bottomItems = [
-  { name: "Support", href: "/support", icon: HelpCircle },
-  { name: "Docs", href: "https://reactpad.gitbook.io/", icon: BookOpen },
 ];
 
 export function Sidebar({ children }: { children: React.ReactNode; }) {
