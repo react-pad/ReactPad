@@ -8,8 +8,11 @@ const openSans = Albert_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "react-pad",
-  description: "a token launchpad",
+  title: "ReactPad",
+  description: "A Token launchpad on Reactive Network",
+  icons: {
+    icon: "https://res.cloudinary.com/dma1c8i6n/image/upload/v1764289640/reactpad_swlsov.png",
+  },
 };
 
 export default function RootLayout({

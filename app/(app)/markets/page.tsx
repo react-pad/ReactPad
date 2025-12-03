@@ -2,50 +2,8 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { MarketCard, type Market } from "@/components/ui/market-card";
-
-const markets: Market[] = [
-  {
-    id: "solana-nexus",
-    name: "Solana Nexus",
-    symbol: "SNX",
-    logo: "https://placehold.co/60x60/8B5CF6/FFFFFF?text=SNX",
-    creator: "solman",
-    marketCap: 1250000,
-    price: 1.25,
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-  },
-  {
-    id: "bonk-inu",
-    name: "Bonk Inu",
-    symbol: "BONK",
-    logo: "https://placehold.co/60x60/2563EB/FFFFFF?text=BONK",
-    creator: "bonk-master",
-    marketCap: 850000000,
-    price: 0.000028,
-    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-  },
-  {
-    id: "cat-coin",
-    name: "Cat Coin",
-    symbol: "CAT",
-    logo: "https://placehold.co/60x60/06B6D4/FFFFFF?text=CAT",
-    creator: "cat-lover",
-    marketCap: 500000,
-    price: 0.05,
-    createdAt: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-  },
-  {
-    id: "doge-killer",
-    name: "Doge Killer",
-    symbol: "LEASH",
-    logo: "https://placehold.co/60x60/EC4899/FFFFFF?text=LEASH",
-    creator: "shytoshi",
-    marketCap: 25000000,
-    price: 250,
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-  },
-];
+import { MarketCard } from "@/components/ui/market-card";
+import { useMarkets } from "@/lib/hooks/useMarkets";
 
 const filterOptions = [
   { label: "All", value: "all" },
@@ -56,8 +14,10 @@ const filterOptions = [
 export default function MarketsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { markets, isLoading } = useMarkets();
 
   const sortedMarkets = [...markets].sort((a, b) => {
+    if (!a || !b) return 0;
     switch (activeFilter) {
       case "new":
         return b.createdAt.getTime() - a.createdAt.getTime();
@@ -69,6 +29,7 @@ export default function MarketsPage() {
   });
 
   const filteredMarkets = sortedMarkets.filter(market => {
+    if (!market) return false;
     const matchesSearch = market.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       market.symbol.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
@@ -82,7 +43,7 @@ export default function MarketsPage() {
             Live<br />Markets
           </h1>
           <p className="text-xl md:text-2xl font-light max-w-2xl">
-            Discover and trade the latest tokens on the Solana network.
+            Discover and trade the latest tokens on the Reactive network.
           </p>
         </div>
 
@@ -112,11 +73,15 @@ export default function MarketsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMarkets.map((market) => (
-            <MarketCard market={market} key={market.id} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="text-center">Loading markets...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredMarkets.map((market) => (
+              market && <MarketCard market={market} key={market.id} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
