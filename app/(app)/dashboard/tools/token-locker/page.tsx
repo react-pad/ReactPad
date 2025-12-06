@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TokenLockerContract } from "@/lib/contracts";
+import { TokenLockerContract } from "@/lib/config";
 import { formatDistanceToNow } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -88,6 +88,10 @@ export default function TokenLockerPage() {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
 
+    const isFormValid = useMemo(() => {
+        return tokenAddress.trim() !== '' && amount.trim() !== '' && duration.trim() !== '' && name.trim() !== '';
+    }, [tokenAddress, amount, duration, name]);
+
     const parsedAmount = useMemo(() => amount ? parseEther(amount) : BigInt(0), [amount]);
 
     const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -140,18 +144,16 @@ export default function TokenLockerPage() {
         })
     }
 
-    const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = useWaitForTransactionReceipt({ hash: approveHash });
-    const { isLoading: isLockConfirming, isSuccess: isLockConfirmed } = useWaitForTransactionReceipt({ hash: lockHash });
-
-    useEffect(() => {
-        if (isApproveConfirmed) {
+    const { isLoading: isApproveConfirming } = useWaitForTransactionReceipt({
+        hash: approveHash,
+        onSuccess() {
             toast.success("Approval successful! You can now lock your tokens.");
             refetchAllowance();
         }
-    }, [isApproveConfirmed, refetchAllowance])
-
-    useEffect(() => {
-        if (isLockConfirmed) {
+    });
+    const { isLoading: isLockConfirming } = useWaitForTransactionReceipt({
+        hash: lockHash,
+        onSuccess() {
             toast.success("Tokens locked successfully!");
             refetchLocks();
             setAmount("");
@@ -159,7 +161,19 @@ export default function TokenLockerPage() {
             setName("");
             setDescription("");
         }
-    }, [isLockConfirmed, refetchLocks])
+    });
+
+    useEffect(() => {
+        if (isApproveConfirming) {
+            toast.loading("Approval confirming...");
+        }
+    }, [isApproveConfirming]);
+
+    useEffect(() => {
+        if (isLockConfirming) {
+            toast.loading("Lock confirming...");
+        }
+    }, [isLockConfirming]);
 
     useEffect(() => {
         const err = lockError || approveError;
@@ -199,11 +213,11 @@ export default function TokenLockerPage() {
                             </div>
 
                             {needsApproval ? (
-                                <Button onClick={handleApprove} disabled={isApproving || isApproveConfirming} className="w-full">
+                                <Button onClick={handleApprove} disabled={!isFormValid || isApproving || isApproveConfirming} className="w-full">
                                     {isApproving || isApproveConfirming ? "Approving..." : "Approve Tokens"}
                                 </Button>
                             ) : (
-                                <Button onClick={handleLock} disabled={isLocking || isLockConfirming} className="w-full">
+                                <Button onClick={handleLock} disabled={!isFormValid || isLocking || isLockConfirming} className="w-full">
                                     {isLocking || isLockConfirming ? "Locking..." : "Lock Tokens"}
                                 </Button>
                             )}

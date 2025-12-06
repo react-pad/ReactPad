@@ -1,5 +1,5 @@
 import { FactoryContract, PairContract } from "@/lib/config";
-import { erc20Abi } from "@/lib/erc20Abi";
+import { erc20Abi } from "@/lib/config";
 import { useMemo } from "react";
 import { useReadContracts } from "wagmi";
 
@@ -93,7 +93,7 @@ export function useMarkets() {
     if (!pairAddresses.length || !pairTokensData || !tokensData) return [];
 
     const tokenMap = new Map();
-    for(let i = 0; i < tokenAddresses.length; i++) {
+    for (let i = 0; i < tokenAddresses.length; i++) {
       const address = tokenAddresses[i];
       const symbol = tokensData?.[i * 3]?.result;
       const name = tokensData?.[i * 3 + 1]?.result;
@@ -105,13 +105,13 @@ export function useMarkets() {
       const token0Address = pairTokensData[index * 3].result as `0x${string}`;
       const token1Address = pairTokensData[index * 3 + 1].result as `0x${string}`;
       const reserves = pairTokensData[index * 3 + 2].result as [bigint, bigint, number] | undefined;
-      
+
       const token0 = tokenMap.get(token0Address);
       const token1 = tokenMap.get(token1Address);
-      
+
       if (!token0 || !token1 || !reserves) return null;
 
-      const price = (Number(reserves[1]) / 10**token1.decimals) / (Number(reserves[0]) / 10**token0.decimals);
+      const price = (Number(reserves[1]) / 10 ** token1.decimals) / (Number(reserves[0]) / 10 ** token0.decimals);
 
       return {
         id: pairAddress,

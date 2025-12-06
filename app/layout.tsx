@@ -1,7 +1,7 @@
+import Providers from "@/components/DynamicProviders";
 import type { Metadata } from "next";
 import { Albert_Sans } from "next/font/google";
 import "./globals.css";
-import Providers from "@/components/DynamicProviders";
 
 const openSans = Albert_Sans({
   subsets: ["latin"],

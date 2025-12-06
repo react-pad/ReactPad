@@ -1,7 +1,7 @@
 "use client"
 
 import { useReadContracts } from "wagmi";
-import { LaunchpadNFTContract } from "@/lib/contracts";
+import { LaunchpadNFTContract } from "@/lib/config";
 import { formatEther } from "viem";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,7 +38,7 @@ export function NFTCard({ nftAddress }: { nftAddress: `0x${string}` }) {
                         <Avatar className="w-14 h-14 border-2 border-black rounded-full">
                             <AvatarImage src="" alt={`${name?.result as string} logo`} />
                             <AvatarFallback className="text-lg font-black uppercase">
-                                { (name?.result as string)?.slice(0, 2)}
+                                {(name?.result as string)?.slice(0, 2)}
                             </AvatarFallback>
                         </Avatar>
                     </div>

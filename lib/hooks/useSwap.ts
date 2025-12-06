@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { RouterContract, Weth9Contract } from "@/lib/config";
-import { erc20Abi } from "@/lib/erc20Abi";
+import { erc20Abi } from "@/lib/config";
 import { formatUnits, parseUnits, maxUint256 } from "viem";
 
 export function useSwap({
@@ -113,7 +113,7 @@ export function useSwap({
     await writeContractAsync({
       ...RouterContract,
       functionName,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       args: swapArgs as any,
       value: fromToken.address === Weth9Contract.address ? amountIn : BigInt(0),
     });

@@ -1,6 +1,5 @@
 "use client";
-import { REACT_TOKEN_ADDRESS, REACT_TOKEN_PRICE_USD } from "@/lib/constants";
-import { reactiveMainnet } from "@/lib/web3";
+import { REACT_TOKEN_ADDRESS, REACT_TOKEN_PRICE_USD } from "@/lib/config";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import {
   Coins,
@@ -11,6 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { sepolia } from "viem/chains";
 import { useAccount, useBalance, useDisconnect, useSwitchChain } from "wagmi";
 
 const navItems = [
@@ -27,7 +27,7 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
   const { switchChain } = useSwitchChain();
 
   const isConnected = !!address;
-  const isWrongNetwork = isConnected && chain?.id !== reactiveMainnet.id;
+  const isWrongNetwork = isConnected && chain?.id !== sepolia.id;
 
   const { data: balanceData } = useBalance({
     address: address,
@@ -79,7 +79,7 @@ export function Sidebar({ children }: { children: React.ReactNode; }) {
             </div>
             {isWrongNetwork ? (
               <button
-                onClick={() => switchChain({ chainId: reactiveMainnet.id })}
+                onClick={() => switchChain({ chainId: sepolia.id })}
                 type="button"
                 className="w-full mt-4 bg-yellow-500 text-black font-black uppercase text-xs tracking-wider border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all px-2 py-2"
               >

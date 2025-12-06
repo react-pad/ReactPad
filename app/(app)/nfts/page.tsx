@@ -1,10 +1,10 @@
 "use client"
 import { Input } from "@/components/ui/input";
+import { NFTCard } from "@/components/ui/nft-card";
+import { NFTFactoryContract } from "@/lib/config";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { NFTCard } from "@/components/ui/nft-card";
 import { useReadContract } from "wagmi";
-import { NFTFactoryContract } from "@/lib/contracts";
 
 export default function NFTsPage() {
   const [searchQuery, setSearchQuery] = useState("");

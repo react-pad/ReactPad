@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { BookOpen, GitMerge, Twitter } from "lucide-react";
 import Image from "next/image";
-import { Twitter, BookOpen, GitMerge } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (

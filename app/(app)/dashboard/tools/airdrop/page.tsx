@@ -1,20 +1,20 @@
 "use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { AirdropMultisenderContract } from "@/lib/contracts";
-import { useEffect, useState, useMemo } from "react";
+import { AirdropMultisenderContract } from "@/lib/config";
 import { useSearchParams } from "next/navigation";
-import { parseEther, erc20Abi, maxUint256 } from "viem";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { erc20Abi, maxUint256, parseEther } from "viem";
+import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 export default function AirdropPage() {
     const searchParams = useSearchParams();
     const { address } = useAccount();
-    
+
     const { data: sendHash, writeContract: sendTokens, isPending: isSending, error: sendError } = useWriteContract();
     const { data: approveHash, writeContract: approve, isPending: isApproving, error: approveError } = useWriteContract();
 
@@ -22,12 +22,31 @@ export default function AirdropPage() {
     const [recipientsData, setRecipientsData] = useState("");
 
     const parsedRecipients = useMemo(() => {
-        const lines = recipientsData.split("\n").filter(line => line.trim() !== "");
-        const recipients = lines.map(line => line.split(',')[0].trim() as `0x${string}`);
-        const amounts = lines.map(line => parseEther(line.split(',')[1].trim()));
-        return { recipients, amounts };
+        if (!recipientsData) {
+            return { recipients: [], amounts: [] };
+        }
+        return recipientsData
+            .split('\n')
+            .reduce((acc, line) => {
+                const parts = line.split(',');
+                if (parts.length === 2) {
+                    const recipient = parts[0].trim();
+                    const amountStr = parts[1].trim();
+                    if (recipient && amountStr) {
+                        try {
+                            const amount = parseEther(amountStr);
+                            acc.recipients.push(recipient as `0x${string}`);
+                            acc.amounts.push(amount);
+                        } catch (error) {
+                            console.log({ error })
+                            console.warn(`Could not parse amount for line: "${line}"`);
+                        }
+                    }
+                }
+                return acc;
+            }, { recipients: [] as `0x${string}`[], amounts: [] as bigint[] });
     }, [recipientsData]);
-    
+
     const totalAmount = useMemo(() => {
         return parsedRecipients.amounts.reduce((acc, curr) => acc + curr, BigInt(0));
     }, [parsedRecipients]);
@@ -73,14 +92,14 @@ export default function AirdropPage() {
     const { isLoading: isSendConfirming, isSuccess: isSendConfirmed } = useWaitForTransactionReceipt({ hash: sendHash });
 
     useEffect(() => {
-        if(isApproveConfirmed) {
+        if (isApproveConfirmed) {
             toast.success("Approval successful! You can now send your tokens.");
             refetchAllowance();
         }
     }, [isApproveConfirmed, refetchAllowance])
 
     useEffect(() => {
-        if(isSendConfirmed) {
+        if (isSendConfirmed) {
             toast.success("Tokens sent successfully!");
             setRecipientsData("");
         }
@@ -88,51 +107,51 @@ export default function AirdropPage() {
 
     useEffect(() => {
         const err = sendError || approveError;
-        if(err) {
+        if (err) {
             toast.error(err.message);
         }
     }, [sendError, approveError])
 
-  return (
-    <div className="container mx-auto px-4 py-12 text-black">
-        <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-            <CardTitle className="text-2xl font-bold">Airdrop Tool</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="space-y-2">
-                    <Label htmlFor="token-address">Token Address</Label>
-                    <Input id="token-address" placeholder="0x..." value={tokenAddress} onChange={e => setTokenAddress(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="recipients">Recipients and Amounts</Label>
-                    <Textarea 
-                        id="recipients" 
-                        placeholder="0x...,100\n0x...,200" 
-                        value={recipientsData} 
-                        onChange={e => setRecipientsData(e.target.value)}
-                        className="min-h-[200px]"
-                    />
-                    <p className="text-xs text-gray-500">
-                        Enter one address and amount per line, separated by a comma.
-                    </p>
-                </div>
+    return (
+        <div className="container mx-auto px-4 py-12 text-black">
+            <Card className="max-w-2xl mx-auto">
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold">Airdrop Tool</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="token-address">Token Address</Label>
+                        <Input id="token-address" placeholder="0x..." value={tokenAddress} onChange={e => setTokenAddress(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="recipients">Recipients and Amounts</Label>
+                        <Textarea
+                            id="recipients"
+                            placeholder="0x...,100\n0x...,200"
+                            value={recipientsData}
+                            onChange={e => setRecipientsData(e.target.value)}
+                            className="min-h-[200px]"
+                        />
+                        <p className="text-xs text-gray-500">
+                            Enter one address and amount per line, separated by a comma.
+                        </p>
+                    </div>
 
-                <div className="text-sm">
-                    Total to send: <span className="font-bold">{totalAmount.toString()}</span>
-                </div>
+                    <div className="text-sm">
+                        Total to send: <span className="font-bold">{totalAmount.toString()}</span>
+                    </div>
 
-                {needsApproval ? (
-                     <Button onClick={handleApprove} disabled={isApproving || isApproveConfirming} className="w-full">
-                        {isApproving || isApproveConfirming ? "Approving..." : "Approve Tokens"}
-                     </Button>
-                ) : (
-                    <Button onClick={handleSend} disabled={isSending || isSendConfirming} className="w-full">
-                        {isSending || isSendConfirming ? "Sending..." : "Send Tokens"}
-                    </Button>
-                )}
-            </CardContent>
-        </Card>
-    </div>
-  );
+                    {needsApproval ? (
+                        <Button onClick={handleApprove} disabled={isApproving || isApproveConfirming} className="w-full">
+                            {isApproving || isApproveConfirming ? "Approving..." : "Approve Tokens"}
+                        </Button>
+                    ) : (
+                        <Button onClick={handleSend} disabled={isSending || isSendConfirming} className="w-full">
+                            {isSending || isSendConfirming ? "Sending..." : "Send Tokens"}
+                        </Button>
+                    )}
+                </CardContent>
+            </Card>
+        </div>
+    );
 }

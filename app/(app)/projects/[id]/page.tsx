@@ -1,125 +1,125 @@
 "use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useReadContracts, useReadContract, useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { LaunchpadPresaleContract } from "@/lib/contracts";
+import { Separator } from "@/components/ui/separator";
+import { LaunchpadPresaleContract } from "@/lib/config";
 import { useParams } from "next/navigation";
-import { erc20Abi, formatEther, parseEther } from "viem";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { erc20Abi, formatEther, parseEther } from "viem";
+import { useAccount, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 export default function ProjectDetailPage() {
-    const { id: presaleAddress } = useParams<{
-        id: `0x${string}`;
-    }>();
-    const { address } = useAccount();
+  const { id: presaleAddress } = useParams<{
+    id: `0x${string}`;
+  }>();
+  const { address } = useAccount();
 
-    const presaleContract = {
-        address: presaleAddress,
-        abi: LaunchpadPresaleContract.abi,
-    } as const;
+  const presaleContract = {
+    address: presaleAddress,
+    abi: LaunchpadPresaleContract.abi,
+  } as const;
 
-    const { data, isLoading, refetch } = useReadContracts({
-        contracts: [
-            { ...presaleContract, functionName: 'saleToken' },
-            { ...presaleContract, functionName: 'paymentToken' },
-            { ...presaleContract, functionName: 'startTime' },
-            { ...presaleContract, functionName: 'endTime' },
-            { ...presaleContract, functionName: 'rate' },
-            { ...presaleContract, functionName: 'softCap' },
-            { ...presaleContract, functionName: 'hardCap' },
-            { ...presaleContract, functionName: 'totalRaised' },
-            { ...presaleContract, functionName: 'minContribution' },
-            { ...presaleContract, functionName: 'maxContribution' },
-            { ...presaleContract, functionName: 'claimEnabled' },
-            { ...presaleContract, functionName: 'refundsEnabled' },
-        ]
+  const { data, isLoading, refetch } = useReadContracts({
+    contracts: [
+      { ...presaleContract, functionName: 'saleToken' },
+      { ...presaleContract, functionName: 'paymentToken' },
+      { ...presaleContract, functionName: 'startTime' },
+      { ...presaleContract, functionName: 'endTime' },
+      { ...presaleContract, functionName: 'rate' },
+      { ...presaleContract, functionName: 'softCap' },
+      { ...presaleContract, functionName: 'hardCap' },
+      { ...presaleContract, functionName: 'totalRaised' },
+      { ...presaleContract, functionName: 'minContribution' },
+      { ...presaleContract, functionName: 'maxContribution' },
+      { ...presaleContract, functionName: 'claimEnabled' },
+      { ...presaleContract, functionName: 'refundsEnabled' },
+    ]
+  });
+
+  const [saleTokenAddress, paymentTokenAddress, _startTime, _endTime, rate, softCap, hardCap, _totalRaised, _minContribution, _maxContribution, claimEnabled, refundsEnabled] = data || [];
+
+  const { data: tokenData, isLoading: isLoadingTokenData } = useReadContracts({
+    contracts: [
+      { address: saleTokenAddress?.result, abi: erc20Abi, functionName: 'name' },
+      { address: saleTokenAddress?.result, abi: erc20Abi, functionName: 'symbol' },
+      { address: paymentTokenAddress?.result, abi: erc20Abi, functionName: 'symbol' },
+    ],
+    query: {
+      enabled: !!saleTokenAddress?.result,
+    }
+  })
+
+  const [name, symbol, paymentSymbol] = tokenData || [];
+
+  const [contributionAmount, setContributionAmount] = useState("");
+  const parsedAmount = useMemo(() => contributionAmount ? parseEther(contributionAmount) : BigInt(0), [contributionAmount]);
+
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    abi: erc20Abi,
+    address: paymentTokenAddress?.result as `0x${string}`,
+    functionName: 'allowance',
+    args: [address!, presaleAddress],
+    query: {
+      enabled: !!address && !!paymentTokenAddress?.result,
+    }
+  });
+
+  const { data: contributeHash, writeContract: contribute } = useWriteContract();
+  const { data: approveHash, writeContract: approve } = useWriteContract();
+  const { data: claimHash, writeContract: claim } = useWriteContract();
+
+  const needsApproval = useMemo(() => {
+    if (!allowance || !paymentTokenAddress?.result || paymentTokenAddress.result === '0x0000000000000000000000000000000000000000') return false;
+    return allowance < parsedAmount;
+  }, [allowance, parsedAmount, paymentTokenAddress?.result]);
+
+  const handleContribute = () => {
+    const args: bigint[] = paymentTokenAddress?.result === '0x0000000000000000000000000000000000000000' ? [] : [parsedAmount];
+    const value = paymentTokenAddress?.result === '0x0000000000000000000000000000000000000000' ? parsedAmount : undefined;
+
+    contribute({
+      ...presaleContract,
+      functionName: "contribute",
+      args: args as never,
+      value
     });
+  }
 
-    const [saleTokenAddress, paymentTokenAddress, _startTime, _endTime, rate, softCap, hardCap, _totalRaised, _minContribution, _maxContribution, claimEnabled, refundsEnabled] = data || [];
-
-    const { data: tokenData, isLoading: isLoadingTokenData } = useReadContracts({
-        contracts: [
-            { address: saleTokenAddress?.result, abi: erc20Abi, functionName: 'name' },
-            { address: saleTokenAddress?.result, abi: erc20Abi, functionName: 'symbol' },
-            { address: paymentTokenAddress?.result, abi: erc20Abi, functionName: 'symbol' },
-        ],
-        query: {
-            enabled: !!saleTokenAddress?.result,
-        }
+  const handleApprove = () => {
+    approve({
+      address: paymentTokenAddress?.result as `0x${string}`,
+      abi: erc20Abi,
+      functionName: "approve",
+      args: [presaleAddress, parsedAmount]
     })
-    
-    const [name, symbol, paymentSymbol] = tokenData || [];
-    
-    const [contributionAmount, setContributionAmount] = useState("");
-    const parsedAmount = useMemo(() => contributionAmount ? parseEther(contributionAmount) : BigInt(0), [contributionAmount]);
-    
-    const { data: allowance, refetch: refetchAllowance } = useReadContract({
-        abi: erc20Abi,
-        address: paymentTokenAddress?.result as `0x${string}`,
-        functionName: 'allowance',
-        args: [address!, presaleAddress],
-        query: {
-            enabled: !!address && !!paymentTokenAddress?.result,
-        }
-    });
+  }
 
-    const { data: contributeHash, writeContract: contribute } = useWriteContract();
-    const { data: approveHash, writeContract: approve } = useWriteContract();
-    const { data: claimHash, writeContract: claim } = useWriteContract();
-    
-    const needsApproval = useMemo(() => {
-        if (!allowance || !paymentTokenAddress?.result || paymentTokenAddress.result === '0x0000000000000000000000000000000000000000') return false;
-        return allowance < parsedAmount;
-    }, [allowance, parsedAmount, paymentTokenAddress?.result]);
+  const handleClaim = () => {
+    claim({ ...presaleContract, functionName: "claimTokens" });
+  }
 
-    const handleContribute = () => {
-        const args: bigint[] = paymentTokenAddress?.result === '0x0000000000000000000000000000000000000000' ? [] : [parsedAmount];
-        const value = paymentTokenAddress?.result === '0x0000000000000000000000000000000000000000' ? parsedAmount : undefined;
+  const { isSuccess: isContributeSuccess } = useWaitForTransactionReceipt({ hash: contributeHash });
+  const { isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({ hash: approveHash });
+  const { isSuccess: isClaimSuccess } = useWaitForTransactionReceipt({ hash: claimHash });
 
-        contribute({
-            ...presaleContract,
-            functionName: "contribute",
-            args: args as never,
-            value
-        });
+  useEffect(() => {
+    if (isContributeSuccess) {
+      toast.success("Contribution successful!");
+      refetch();
     }
-
-    const handleApprove = () => {
-        approve({
-            address: paymentTokenAddress?.result as `0x${string}`,
-            abi: erc20Abi,
-            functionName: "approve",
-            args: [presaleAddress, parsedAmount]
-        })
+    if (isApproveSuccess) {
+      toast.success("Approval successful!");
+      refetchAllowance();
     }
-
-    const handleClaim = () => {
-        claim({ ...presaleContract, functionName: "claimTokens" });
+    if (isClaimSuccess) {
+      toast.success("Tokens claimed successfully!");
     }
-
-    const { isSuccess: isContributeSuccess } = useWaitForTransactionReceipt({ hash: contributeHash });
-    const { isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({ hash: approveHash });
-    const { isSuccess: isClaimSuccess } = useWaitForTransactionReceipt({ hash: claimHash });
-
-    useEffect(() => {
-        if(isContributeSuccess) {
-            toast.success("Contribution successful!");
-            refetch();
-        }
-        if (isApproveSuccess) {
-            toast.success("Approval successful!");
-            refetchAllowance();
-        }
-        if (isClaimSuccess) {
-            toast.success("Tokens claimed successfully!");
-        }
-    }, [isContributeSuccess, isApproveSuccess, isClaimSuccess, refetch, refetchAllowance])
+  }, [isContributeSuccess, isApproveSuccess, isClaimSuccess, refetch, refetchAllowance])
 
 
-  if (isLoading || isLoadingTokenData || !data ||!tokenData) {
+  if (isLoading || isLoadingTokenData || !data || !tokenData) {
     return <div>Loading project...</div>;
   }
   const isFinished = claimEnabled?.result || refundsEnabled?.result;
@@ -135,29 +135,29 @@ export default function ProjectDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left Column */}
         <div className="lg:col-span-2 space-y-8">
-            {!isFinished ? (
+          {!isFinished ? (
             <Card>
-                <CardHeader><CardTitle>Contribute</CardTitle></CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex items-center space-x-4">
-                        <Input type="number" placeholder="Amount" className="flex-grow" value={contributionAmount} onChange={e => setContributionAmount(e.target.value)} />
-                        {needsApproval ? (
-                            <Button onClick={handleApprove}>Approve</Button>
-                        ) : (
-                            <Button onClick={handleContribute}>Contribute</Button>
-                        )}
-                    </div>
-                </CardContent>
+              <CardHeader><CardTitle>Contribute</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <Input type="number" placeholder="Amount" className="flex-grow" value={contributionAmount} onChange={e => setContributionAmount(e.target.value)} />
+                  {needsApproval ? (
+                    <Button onClick={handleApprove}>Approve</Button>
+                  ) : (
+                    <Button onClick={handleContribute}>Contribute</Button>
+                  )}
+                </div>
+              </CardContent>
             </Card>
-            ) : (
+          ) : (
             <Card>
-                <CardHeader><CardTitle>Presale Finished</CardTitle></CardHeader>
-                <CardContent>
-                    {claimEnabled?.result && <Button onClick={handleClaim}>Claim Tokens</Button>}
-                    {refundsEnabled?.result && <Button>Claim Refund</Button>}
-                </CardContent>
+              <CardHeader><CardTitle>Presale Finished</CardTitle></CardHeader>
+              <CardContent>
+                {claimEnabled?.result && <Button onClick={handleClaim}>Claim Tokens</Button>}
+                {refundsEnabled?.result && <Button>Claim Refund</Button>}
+              </CardContent>
             </Card>
-            )}
+          )}
         </div>
 
         {/* Right Column */}

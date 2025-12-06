@@ -1,8 +1,8 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -10,101 +10,101 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TokenFactoryContract } from "@/lib/config";
 import { useEffect, useState } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { TokenFactoryContract } from "@/lib/contracts";
-import { parseEther } from "viem";
 import { toast } from "sonner";
+import { parseUnits } from "viem";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 enum TokenType {
-    Plain,
-    Mintable,
-    Burnable,
-    Taxable,
-    NonMintable
+  Plain,
+  Mintable,
+  Burnable,
+  Taxable,
+  NonMintable
 }
 
 export default function CreateTokenPage() {
-    const { address } = useAccount();
-    const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { address } = useAccount();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
 
-    const [tokenType, setTokenType] = useState<TokenType>(TokenType.Plain);
-    const [name, setName] = useState("");
-    const [symbol, setSymbol] = useState("");
-    const [decimals, setDecimals] = useState("18");
-    const [initialSupply, setInitialSupply] = useState("1000000");
-    const [initialRecipient, setInitialRecipient] = useState("");
-    const [taxWallet, setTaxWallet] = useState("");
-    const [taxBps, setTaxBps] = useState("0");
+  const [tokenType, setTokenType] = useState<TokenType>(TokenType.Plain);
+  const [name, setName] = useState("");
+  const [symbol, setSymbol] = useState("");
+  const [decimals, setDecimals] = useState("18");
+  const [initialSupply, setInitialSupply] = useState("1000000");
+  const [initialRecipient, setInitialRecipient] = useState("");
+  const [taxWallet, setTaxWallet] = useState("");
+  const [taxBps, setTaxBps] = useState("0");
 
-    useEffect(() => {
-        if (address) {
-            setInitialRecipient(address);
+  useEffect(() => {
+    if (address) {
+      setInitialRecipient(address);
+    }
+  }, [address])
+
+  const handleCreateToken = async () => {
+    const tokenParams = {
+      name,
+      symbol,
+      decimals: parseInt(decimals),
+      initialSupply: parseUnits(initialSupply, parseInt(decimals)),
+      initialRecipient: initialRecipient as `0x${string}`
+    };
+
+    let functionName: "createPlainToken" | "createMintableToken" | "createBurnableToken" | "createTaxableToken" | "createNonMintableToken";
+    const args: unknown[] = [tokenParams];
+
+    switch (tokenType) {
+      case TokenType.Plain:
+        functionName = "createPlainToken";
+        break;
+      case TokenType.Mintable:
+        functionName = "createMintableToken";
+        break;
+      case TokenType.Burnable:
+        functionName = "createBurnableToken";
+        break;
+      case TokenType.Taxable:
+        functionName = "createTaxableToken";
+        const taxParams = {
+          taxWallet: taxWallet as `0x${string}`,
+          taxBps: parseInt(taxBps)
         }
-    }, [address])
-
-    const handleCreateToken = async () => {
-        const tokenParams = {
-            name,
-            symbol,
-            decimals: parseInt(decimals),
-            initialSupply: parseEther(initialSupply, "wei"),
-            initialRecipient: initialRecipient as `0x${string}`
-        };
-
-        let functionName: "createPlainToken" | "createMintableToken" | "createBurnableToken" | "createTaxableToken" | "createNonMintableToken";
-        const args: unknown[] = [tokenParams];
-
-        switch (tokenType) {
-            case TokenType.Plain:
-                functionName = "createPlainToken";
-                break;
-            case TokenType.Mintable:
-                functionName = "createMintableToken";
-                break;
-            case TokenType.Burnable:
-                functionName = "createBurnableToken";
-                break;
-            case TokenType.Taxable:
-                functionName = "createTaxableToken";
-                const taxParams = {
-                    taxWallet: taxWallet as `0x${string}`,
-                    taxBps: parseInt(taxBps)
-                }
-                args.push(taxParams);
-                break;
-            case TokenType.NonMintable:
-                functionName = "createNonMintableToken";
-                break;
-            default:
-                toast.error("Invalid token type selected");
-                return;
-        }
-
-        writeContract({
-            address: TokenFactoryContract.address,
-            abi: TokenFactoryContract.abi,
-            functionName,
-            args: args as never,
-        });
+        args.push(taxParams);
+        break;
+      case TokenType.NonMintable:
+        functionName = "createNonMintableToken";
+        break;
+      default:
+        toast.error("Invalid token type selected");
+        return;
     }
 
-    const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    writeContract({
+      address: TokenFactoryContract.address,
+      abi: TokenFactoryContract.abi,
+      functionName,
+      args: args as never,
+    });
+  }
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
     })
 
-    useEffect(() => {
-        if (isConfirming) {
-            toast.loading("Transaction is confirming...");
-        }
-        if (isConfirmed) {
-            toast.success("Token created successfully!");
-        }
-        if (error) {
-            toast.error(error.message);
-        }
-    }, [isConfirming, isConfirmed, error])
+  useEffect(() => {
+    if (isConfirming) {
+      toast.loading("Transaction is confirming...");
+    }
+    if (isConfirmed) {
+      toast.success("Token created successfully!");
+    }
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [isConfirming, isConfirmed, error])
 
   return (
     <div className="container mx-auto px-4 py-12 text-black">
@@ -149,7 +149,7 @@ export default function CreateTokenPage() {
               <Input id="initial-supply" type="number" placeholder="1000000" value={initialSupply} onChange={e => setInitialSupply(e.target.value)} />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="initial-recipient">Initial Recipient</Label>
             <Input id="initial-recipient" placeholder="e.g. 0x..." value={initialRecipient} onChange={e => setInitialRecipient(e.target.value)} />
@@ -158,15 +158,15 @@ export default function CreateTokenPage() {
 
           {tokenType === TokenType.Taxable && (
             <div className="space-y-4 pt-4 border-t">
-                <h3 className="font-semibold">Taxable Token Configuration</h3>
-                <div className="space-y-2">
-                    <Label htmlFor="tax-wallet">Tax Wallet</Label>
-                    <Input id="tax-wallet" placeholder="e.g. 0x..." value={taxWallet} onChange={e => setTaxWallet(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="tax-bps">Tax (in BPS, 1% = 100)</Label>
-                    <Input id="tax-bps" type="number" placeholder="100" value={taxBps} onChange={e => setTaxBps(e.target.value)} />
-                </div>
+              <h3 className="font-semibold">Taxable Token Configuration</h3>
+              <div className="space-y-2">
+                <Label htmlFor="tax-wallet">Tax Wallet</Label>
+                <Input id="tax-wallet" placeholder="e.g. 0x..." value={taxWallet} onChange={e => setTaxWallet(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tax-bps">Tax (in BPS, 1% = 100)</Label>
+                <Input id="tax-bps" type="number" placeholder="100" value={taxBps} onChange={e => setTaxBps(e.target.value)} />
+              </div>
             </div>
           )}
 

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PresaleFactoryContract } from "@/lib/contracts";
+import { PresaleFactoryContract } from "@/lib/config";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -82,7 +82,7 @@ export default function CreatePresalePage() {
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="payment-token">Payment Token Address</Label>
-                        <Input id="payment-token" placeholder="0x... (or leave empty for ETH)" value={paymentToken} onChange={e => setPaymentToken(e.target.value)} />
+                        <Input id="payment-token" placeholder="0x..." value={paymentToken} onChange={e => setPaymentToken(e.target.value)} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">

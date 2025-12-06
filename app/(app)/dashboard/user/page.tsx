@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { TokenFactoryContract } from "@/lib/contracts";
+import { TokenFactoryContract } from "@/lib/config";
 import Link from "next/link";
 import { erc20Abi } from "viem";
 import { useAccount, useReadContract } from "wagmi";
@@ -25,12 +25,12 @@ function TokenInfo({ tokenAddress }: { tokenAddress: `0x${string}` }) {
   }
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
         <h3 className="font-bold">{name as string} ({token as string})</h3>
-        <p className="text-sm text-gray-500">{tokenAddress}</p>
+        <p className="text-sm text-gray-500 break-all">{tokenAddress}</p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button variant="outline" size="sm" asChild>
           <Link href={`/dashboard/tools/token-locker?token=${tokenAddress}`}>Lock</Link>
         </Button>
@@ -75,9 +75,11 @@ export default function UserDashboardPage() {
             <CardContent>
               {isLoading && <p>Loading your tokens...</p>}
               {createdTokens && createdTokens.length > 0 ? (
-                <div className="space-y-6">
+                <div className="divide-y divide-gray-200">
                   {(createdTokens as `0x${string}`[]).map((token) => (
-                    <TokenInfo key={token} tokenAddress={token} />
+                    <div key={token} className="py-3">
+                      <TokenInfo tokenAddress={token} />
+                    </div>
                   ))}
                 </div>
               ) : (

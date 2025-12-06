@@ -1,18 +1,35 @@
 "use client";
 
 import { RainbowKitProvider, connectorsForWallets } from "@rainbow-me/rainbowkit";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
-import { WagmiProvider, createConfig, http } from "wagmi";
+import "@rainbow-me/rainbowkit/styles.css";
 import {
-  rainbowWallet,
-  walletConnectWallet,
   coinbaseWallet,
   metaMaskWallet,
+  rainbowWallet,
+  walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
-import "@rainbow-me/rainbowkit/styles.css";
-import { reactiveMainnet, reactiveTestnet } from "@/lib/web3";
+import { useState } from "react";
+import { WagmiProvider, createConfig, http } from "wagmi";
+
+import { sepolia } from "viem/chains";
+
+// export const reactiveMainnet: Chain = {
+//   id: 1597,
+//   name: 'Reactive Mainnet',
+//   nativeCurrency: {
+//     name: 'REACT',
+//     symbol: 'REACT',
+//     decimals: 18,
+//   },
+//   rpcUrls: {
+//     default: { http: ['https://mainnet.rpc.reactive.network'] }
+//   },
+//   blockExplorers: {
+//     default: { name: 'ReactiveScan', url: 'https://reactscan.net/' }
+//   },
+// }
 
 const connectors = connectorsForWallets(
   [
@@ -28,16 +45,15 @@ const connectors = connectorsForWallets(
   ],
   {
     appName: 'ReactPad',
-    projectId: 'YOUR_PROJECT_ID', // Replace with your WalletConnect project ID
+    projectId: '05f1bc7c3d4ce4d40fe55e540e58c2da', // Replace with your WalletConnect project ID
   }
 );
 
 const config = createConfig({
-  chains: [reactiveMainnet, reactiveTestnet],
+  chains: [sepolia],
   connectors,
   transports: {
-    [reactiveMainnet.id]: http(),
-    [reactiveTestnet.id]: http(),
+    [sepolia.id]: http(),
   },
 });
 
