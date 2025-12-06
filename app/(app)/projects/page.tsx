@@ -2,61 +2,9 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { ProjectCard, type Project } from "@/components/ui/project-card";
-
-const projects: Project[] = [
-  {
-    id: "etherium-nexus",
-    name: "Etherium Nexus",
-    description: "A naval-inspired Web3 game in an immersive virtual world.",
-    logo: "https://placehold.co/60x60/8B5CF6/FFFFFF?text=EN",
-    statusType: "live",
-    raised: 87567,
-    goal: 120000,
-    currency: "WMTX",
-    progress: 73,
-    endTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    website: "en.io",
-  },
-  {
-    id: "quantum-chain",
-    name: "QuantumChain",
-    description: "A revolutionary new DeFi protocol for secure and scalable assets.",
-    logo: "https://placehold.co/60x60/2563EB/FFFFFF?text=QC",
-    statusType: "upcoming",
-    raised: 0,
-    goal: 150000,
-    currency: "NETZ",
-    progress: 0,
-    startTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-    website: "quantumchain.io",
-  },
-  {
-    id: "neo-nova",
-    name: "NeoNova",
-    description: "The next generation of NFT marketplace with a focus on community.",
-    logo: "https://placehold.co/60x60/06B6D4/FFFFFF?text=NN",
-    statusType: "upcoming",
-    raised: 0,
-    goal: 100000,
-    currency: "NETZ",
-    progress: 0,
-    startTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    website: "neonova.art",
-  },
-  {
-    id: "cipher-crest",
-    name: "CipherCrest",
-    description: "A decentralized social media platform that values user privacy.",
-    logo: "https://placehold.co/60x60/EC4899/FFFFFF?text=CC",
-    statusType: "completed",
-    raised: 120000,
-    goal: 120000,
-    currency: "WMTX",
-    progress: 100,
-    website: "ciphercrest.com",
-  },
-];
+import { PresaleCard } from "@/components/ui/presale-card";
+import { useReadContract } from "wagmi";
+import { PresaleFactoryContract } from "@/lib/contracts";
 
 const statusFilters = [
   { label: "All", value: "all" },
@@ -69,12 +17,14 @@ export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProjects = projects.filter(project => {
-    const matchesFilter = activeFilter === "all" || project.statusType === activeFilter;
-    const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
+  const { data: presales, isLoading } = useReadContract({
+    abi: PresaleFactoryContract.abi,
+    address: PresaleFactoryContract.address,
+    functionName: 'allPresales',
   });
+
+  // Filtering is not implemented with live data yet.
+  // This will require fetching status for each presale and then filtering.
 
   return (
     <div className="bg-white min-h-screen">
@@ -114,9 +64,10 @@ export default function ProjectsPage() {
           </div>
         </div>
 
+        {isLoading && <p>Loading projects...</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
-            <ProjectCard project={project} key={project.id} />
+          {presales && presales.map((presale) => (
+            <PresaleCard presaleAddress={presale} key={presale} />
           ))}
         </div>
       </div>

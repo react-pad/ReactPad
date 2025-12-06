@@ -214,37 +214,25 @@ export const FactoryContract = {
         ]
 } as const;
 
-export const MulticallContract = {
-    address: "0xf800Dc5d38Ddab37dC996D176C7Af8aF6e603A87",
+export const Multicall3Contract = {
+    address: "0xcA11bde05977b3631167028862bE2a173976CA11", // Standard Multicall3 address on many chains
     abi: [
         {
-            "constant": true,
-            "inputs": [],
-            "name": "getCurrentBlockTimestamp",
-            "outputs": [
-                {
-                    "name": "timestamp",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": false,
             "inputs": [
                 {
                     "components": [
                         {
+                            "internalType": "address",
                             "name": "target",
                             "type": "address"
                         },
                         {
+                            "internalType": "bytes",
                             "name": "callData",
                             "type": "bytes"
                         }
                     ],
+                    "internalType": "struct Multicall2.Call[]",
                     "name": "calls",
                     "type": "tuple[]"
                 }
@@ -252,97 +240,190 @@ export const MulticallContract = {
             "name": "aggregate",
             "outputs": [
                 {
+                    "internalType": "uint256",
                     "name": "blockNumber",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "bytes[]",
                     "name": "returnData",
                     "type": "bytes[]"
                 }
             ],
-            "payable": false,
-            "stateMutability": "nonpayable",
+            "stateMutability": "payable",
             "type": "function"
         },
         {
-            "constant": true,
-            "inputs": [],
-            "name": "getLastBlockHash",
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "target",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "allowFailure",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "callData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall3.Call3[]",
+                    "name": "calls",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "aggregate3",
             "outputs": [
                 {
+                    "components": [
+                        {
+                            "internalType": "bool",
+                            "name": "success",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "returnData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall3.Result[]",
+                    "name": "returnData",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "target",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "allowFailure",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "value",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "callData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall3.Call3Value[]",
+                    "name": "calls",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "aggregate3Value",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "bool",
+                            "name": "success",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "returnData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall3.Result[]",
+                    "name": "returnData",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "target",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "callData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall2.Call[]",
+                    "name": "calls",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "blockAndAggregate",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "blockNumber",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes32",
                     "name": "blockHash",
                     "type": "bytes32"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "bool",
+                            "name": "success",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "returnData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall2.Result[]",
+                    "name": "returnData",
+                    "type": "tuple[]"
                 }
             ],
-            "payable": false,
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getBasefee",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "basefee",
+                    "type": "uint256"
+                }
+            ],
             "stateMutability": "view",
             "type": "function"
         },
         {
-            "constant": true,
             "inputs": [
                 {
-                    "name": "addr",
-                    "type": "address"
-                }
-            ],
-            "name": "getEthBalance",
-            "outputs": [
-                {
-                    "name": "balance",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getCurrentBlockDifficulty",
-            "outputs": [
-                {
-                    "name": "difficulty",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getCurrentBlockGasLimit",
-            "outputs": [
-                {
-                    "name": "gaslimit",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getCurrentBlockCoinbase",
-            "outputs": [
-                {
-                    "name": "coinbase",
-                    "type": "address"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
+                    "internalType": "uint256",
                     "name": "blockNumber",
                     "type": "uint256"
                 }
@@ -350,12 +431,228 @@ export const MulticallContract = {
             "name": "getBlockHash",
             "outputs": [
                 {
+                    "internalType": "bytes32",
                     "name": "blockHash",
                     "type": "bytes32"
                 }
             ],
-            "payable": false,
             "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getBlockNumber",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "blockNumber",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getChainId",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "chainid",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getCurrentBlockCoinbase",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "coinbase",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getCurrentBlockDifficulty",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "difficulty",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getCurrentBlockGasLimit",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gaslimit",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getCurrentBlockTimestamp",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "timestamp",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                }
+            ],
+            "name": "getEthBalance",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "balance",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getLastBlockHash",
+            "outputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "blockHash",
+                    "type": "bytes32"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bool",
+                    "name": "requireSuccess",
+                    "type": "bool"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "target",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "callData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall2.Call[]",
+                    "name": "calls",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "tryAggregate",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "bool",
+                            "name": "success",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "returnData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall2.Result[]",
+                    "name": "returnData",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bool",
+                    "name": "requireSuccess",
+                    "type": "bool"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "target",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "callData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall2.Call[]",
+                    "name": "calls",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "tryBlockAndAggregate",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "blockNumber",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "blockHash",
+                    "type": "bytes32"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "bool",
+                            "name": "success",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "returnData",
+                            "type": "bytes"
+                        }
+                    ],
+                    "internalType": "struct Multicall2.Result[]",
+                    "name": "returnData",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "payable",
             "type": "function"
         }
     ]
@@ -2690,962 +2987,1226 @@ export const V2ERC20 = {
     ]
 };
 
-export const FarmrLPStaking = {
-    // address: "0xB6ea3c9e3A492B239e0964539FE297d472161cEd",
-    address: "0x596F4C88f45Ed747423c65C6e5124c64594223E3",
+export const AirdropMultiSender = {
+    address: "0x8b3f8475ec91073f294ed0cfecf857c174db8a73",
     abi: [
         {
+            "type": "function",
+            "name": "sendERC20",
             "inputs": [
                 {
-                    "internalType": "address",
-                    "name": "_stakingToken",
-                    "type": "address"
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "contract IERC20"
                 },
                 {
-                    "internalType": "address",
-                    "name": "_rewardToken",
-                    "type": "address"
+                    "name": "recipients",
+                    "type": "address[]",
+                    "internalType": "address[]"
                 },
                 {
-                    "internalType": "address",
-                    "name": "_lpPair",
-                    "type": "address"
+                    "name": "amounts",
+                    "type": "uint256[]",
+                    "internalType": "uint256[]"
                 }
             ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-            "anonymous": false,
+            "type": "function",
+            "name": "sendETH",
             "inputs": [
                 {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "Staker",
-                    "type": "address"
+                    "name": "recipients",
+                    "type": "address[]",
+                    "internalType": "address[]"
                 },
                 {
-                    "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Amount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Timestamp",
-                    "type": "uint256"
+                    "name": "amounts",
+                    "type": "uint256[]",
+                    "internalType": "uint256[]"
                 }
             ],
-            "name": "Stake",
-            "type": "event"
+            "outputs": [],
+            "stateMutability": "payable"
         },
         {
-            "anonymous": false,
+            "type": "event",
+            "name": "EthSent",
             "inputs": [
                 {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "Staker",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Amount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Timestamp",
-                    "type": "uint256"
-                }
-            ],
-            "name": "UnStake",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
+                    "name": "totalAmount",
+                    "type": "uint256",
                     "indexed": false,
-                    "internalType": "address",
-                    "name": "Staker",
-                    "type": "address"
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "TokensSent",
+            "inputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
                 },
                 {
+                    "name": "totalAmount",
+                    "type": "uint256",
                     "indexed": false,
-                    "internalType": "uint256",
-                    "name": "RewardAmount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "Timestamp",
-                    "type": "uint256"
+                    "internalType": "uint256"
                 }
             ],
-            "name": "claimedRewards",
-            "type": "event"
+            "anonymous": false
         },
         {
-            "inputs": [],
-            "name": "EmergencyRecover",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
+            "type": "error",
+            "name": "AddressEmptyCode",
             "inputs": [
                 {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
+                    "name": "target",
+                    "type": "address",
+                    "internalType": "address"
                 }
-            ],
-            "name": "balanceOf",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
+            ]
         },
         {
+            "type": "error",
+            "name": "AddressInsufficientBalance",
             "inputs": [
                 {
-                    "internalType": "address",
-                    "name": "user",
-                    "type": "address"
+                    "name": "account",
+                    "type": "address",
+                    "internalType": "address"
                 }
-            ],
-            "name": "calculateReward",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "userReward",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
+            ]
         },
         {
-            "inputs": [],
-            "name": "duration",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
+            "type": "error",
+            "name": "FailedInnerCall",
+            "inputs": []
         },
         {
-            "inputs": [],
-            "name": "finalise",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
+            "type": "error",
+            "name": "InvalidAmount",
+            "inputs": []
         },
         {
-            "inputs": [],
-            "name": "finishAt",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
+            "type": "error",
+            "name": "InvalidRecipient",
+            "inputs": []
         },
         {
+            "type": "error",
+            "name": "LengthMismatch",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "SafeERC20FailedOperation",
             "inputs": [
                 {
-                    "internalType": "uint256",
-                    "name": "lpAmount",
-                    "type": "uint256"
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
                 }
-            ],
-            "name": "getLPTokenValue",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getTokenInfo",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "token0",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "token1",
-                    "type": "address"
-                },
-                {
-                    "internalType": "bool",
-                    "name": "farmrIsToken0",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "lpPair",
-            "outputs": [
-                {
-                    "internalType": "contract IUniswapV2Pair",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_addy",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "notify",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardPerToken",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardRate",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "rewards",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardsToken",
-            "outputs": [
-                {
-                    "internalType": "contract IERC20",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "stake",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "stakers",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "totalStaked",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "lastStakedTimestamp",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "reward",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "stakingStatus",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "stakingToken",
-            "outputs": [
-                {
-                    "internalType": "contract IERC20",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_stakingDuration",
-                    "type": "uint256"
-                }
-            ],
-            "name": "startStaking",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalTokensStakeCount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_account",
-                    "type": "address"
-                }
-            ],
-            "name": "totalUserEarned",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_finishAt",
-                    "type": "uint256"
-                }
-            ],
-            "name": "updateFinishAt",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_newRewardRate",
-                    "type": "uint256"
-                }
-            ],
-            "name": "updateRewardRate",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "withdraw",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
+            ]
         }
     ]
-};
+}
 
-export const FarmrStaking = {
-    // address: "0xb391249955ab3B4E4825BD15a0B15BEd216b55DF",
-    address: "0x89E1A8e5F6Bb5Ce6389310032aaB2D7F41166e6F",
+export const NFTFactory = {
+    address: "0xc1e3b5ca888c2e63cd87934e76393cc19a418397",
     abi: [
         {
+            "type": "function",
+            "name": "createETHNFT",
             "inputs": [
                 {
-                    "internalType": "address",
-                    "name": "_tokenAddress",
-                    "type": "address"
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct NFTFactory.NFTParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "baseURI",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "maxSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "payoutWallet",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "mintConfig",
+                            "type": "tuple",
+                            "internalType": "struct MintConfig",
+                            "components": [
+                                {
+                                    "name": "saleStart",
+                                    "type": "uint64",
+                                    "internalType": "uint64"
+                                },
+                                {
+                                    "name": "saleEnd",
+                                    "type": "uint64",
+                                    "internalType": "uint64"
+                                },
+                                {
+                                    "name": "walletLimit",
+                                    "type": "uint32",
+                                    "internalType": "uint32"
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "uint128",
+                                    "internalType": "uint128"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
+            "outputs": [
+                {
+                    "name": "nft",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
         },
         {
-            "anonymous": false,
+            "type": "function",
+            "name": "createUSDCNFT",
             "inputs": [
                 {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct NFTFactory.NFTParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "baseURI",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "maxSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "payoutWallet",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "mintConfig",
+                            "type": "tuple",
+                            "internalType": "struct MintConfig",
+                            "components": [
+                                {
+                                    "name": "saleStart",
+                                    "type": "uint64",
+                                    "internalType": "uint64"
+                                },
+                                {
+                                    "name": "saleEnd",
+                                    "type": "uint64",
+                                    "internalType": "uint64"
+                                },
+                                {
+                                    "name": "walletLimit",
+                                    "type": "uint32",
+                                    "internalType": "uint32"
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "uint128",
+                                    "internalType": "uint128"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "paymentToken",
+                    "type": "address",
+                    "internalType": "contract IERC20"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "nft",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "deployments",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "nft",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "acceptsEth",
+                    "type": "bool",
+                    "internalType": "bool"
+                },
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "tokensCreatedBy",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address[]",
+                    "internalType": "address[]"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "totalDeployments",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "event",
+            "name": "NFTCreated",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "address",
                     "indexed": true,
-                    "internalType": "address",
-                    "name": "Staker",
-                    "type": "address"
+                    "internalType": "address"
                 },
                 {
+                    "name": "nft",
+                    "type": "address",
                     "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Amount",
-                    "type": "uint256"
+                    "internalType": "address"
                 },
                 {
+                    "name": "acceptsEth",
+                    "type": "bool",
                     "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Timestamp",
-                    "type": "uint256"
+                    "internalType": "bool"
                 }
             ],
-            "name": "Stake",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "Staker",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Amount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "uint256",
-                    "name": "Timestamp",
-                    "type": "uint256"
-                }
-            ],
-            "name": "UnStake",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "Staker",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "RewardAmount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "Timestamp",
-                    "type": "uint256"
-                }
-            ],
-            "name": "claimedRewards",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "EmergencyRecover",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "balanceOf",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "user",
-                    "type": "address"
-                }
-            ],
-            "name": "calculateReward",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "userReward",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "duration",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "finalise",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "finishAt",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_addy",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "notify",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_account",
-                    "type": "address"
-                }
-            ],
-            "name": "pendingRewards",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardPerToken",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardRate",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "rewards",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardsToken",
-            "outputs": [
-                {
-                    "internalType": "contract IERC20",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "stake",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "stakers",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "totalStaked",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "lastStakedTimestamp",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "reward",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "stakingStatus",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "stakingToken",
-            "outputs": [
-                {
-                    "internalType": "contract IERC20",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_stakingDuration",
-                    "type": "uint256"
-                }
-            ],
-            "name": "startStaking",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalTokensStakeCount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_account",
-                    "type": "address"
-                }
-            ],
-            "name": "totalUserEarned",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_finishAt",
-                    "type": "uint256"
-                }
-            ],
-            "name": "updateFinishAt",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_newRewardRate",
-                    "type": "uint256"
-                }
-            ],
-            "name": "updateRewardRate",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "withdraw",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
+            "anonymous": false
         }
     ]
-};
+}
+
+export const PresaleFactory = {
+    address: "0x90a71b121e716b9ac67d15bf641d18866c54b636",
+    abi: [
+        {
+            "type": "function",
+            "name": "allPresales",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "createPresale",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct PresaleFactory.CreateParams",
+                    "components": [
+                        {
+                            "name": "saleToken",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "paymentToken",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "config",
+                            "type": "tuple",
+                            "internalType": "struct PresaleConfig",
+                            "components": [
+                                {
+                                    "name": "startTime",
+                                    "type": "uint64",
+                                    "internalType": "uint64"
+                                },
+                                {
+                                    "name": "endTime",
+                                    "type": "uint64",
+                                    "internalType": "uint64"
+                                },
+                                {
+                                    "name": "rate",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "softCap",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "hardCap",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "minContribution",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "maxContribution",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "owner",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "presale",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "presalesCreatedBy",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address[]",
+                    "internalType": "address[]"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "totalPresales",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "event",
+            "name": "PresaleCreated",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "presale",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "saleToken",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "paymentToken",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        }
+    ]
+}
+
+export const TokenFactory = {
+    address: "0xba3a598a13ce439bfed5b18b405e9e45ef2a1336",
+    abi: [
+        {
+            "type": "function",
+            "name": "createBurnableToken",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct TokenFactory.TokenParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "decimals",
+                            "type": "uint8",
+                            "internalType": "uint8"
+                        },
+                        {
+                            "name": "initialSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "initialRecipient",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "createMintableToken",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct TokenFactory.TokenParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "decimals",
+                            "type": "uint8",
+                            "internalType": "uint8"
+                        },
+                        {
+                            "name": "initialSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "initialRecipient",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "createNonMintableToken",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct TokenFactory.TokenParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "decimals",
+                            "type": "uint8",
+                            "internalType": "uint8"
+                        },
+                        {
+                            "name": "initialSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "initialRecipient",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "createPlainToken",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct TokenFactory.TokenParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "decimals",
+                            "type": "uint8",
+                            "internalType": "uint8"
+                        },
+                        {
+                            "name": "initialSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "initialRecipient",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "createTaxableToken",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct TokenFactory.TokenParams",
+                    "components": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "decimals",
+                            "type": "uint8",
+                            "internalType": "uint8"
+                        },
+                        {
+                            "name": "initialSupply",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "initialRecipient",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                },
+                {
+                    "name": "tax",
+                    "type": "tuple",
+                    "internalType": "struct TokenFactory.TaxParams",
+                    "components": [
+                        {
+                            "name": "taxWallet",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "taxBps",
+                            "type": "uint96",
+                            "internalType": "uint96"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "deployments",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenType",
+                    "type": "uint8",
+                    "internalType": "enum TokenFactory.TokenType"
+                },
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "tokensCreatedBy",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address[]",
+                    "internalType": "address[]"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "totalDeployments",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "event",
+            "name": "TokenCreated",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "token",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenType",
+                    "type": "uint8",
+                    "indexed": true,
+                    "internalType": "enum TokenFactory.TokenType"
+                }
+            ],
+            "anonymous": false
+        }
+    ]
+}
+
+export const TokenLocker = {
+    address: "0xf32488c7e6bd149841e8801c8a60fc4f12774002",
+    abi: [
+        {
+            "type": "function",
+            "name": "extendLock",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "additionalTime",
+                    "type": "uint64",
+                    "internalType": "uint64"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "getLock",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct TokenLocker.LockInfo",
+                    "components": [
+                        {
+                            "name": "token",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "owner",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "amount",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "lockDate",
+                            "type": "uint64",
+                            "internalType": "uint64"
+                        },
+                        {
+                            "name": "unlockDate",
+                            "type": "uint64",
+                            "internalType": "uint64"
+                        },
+                        {
+                            "name": "withdrawn",
+                            "type": "bool",
+                            "internalType": "bool"
+                        },
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "internalType": "string"
+                        },
+                        {
+                            "name": "description",
+                            "type": "string",
+                            "internalType": "string"
+                        }
+                    ]
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "lockTokens",
+            "inputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "lockDuration",
+                    "type": "uint64",
+                    "internalType": "uint64"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "internalType": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string",
+                    "internalType": "string"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "locksOfOwner",
+            "inputs": [
+                {
+                    "name": "owner",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "lockIds",
+                    "type": "uint256[]",
+                    "internalType": "uint256[]"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "totalLocks",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "transferLockOwnership",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "newOwner",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "unlock",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "event",
+            "name": "LockCreated",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "indexed": true,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "token",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "owner",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "unlockDate",
+                    "type": "uint64",
+                    "indexed": false,
+                    "internalType": "uint64"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "LockExtended",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "indexed": true,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "newUnlockDate",
+                    "type": "uint64",
+                    "indexed": false,
+                    "internalType": "uint64"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "LockReleased",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "indexed": true,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "LockTransferred",
+            "inputs": [
+                {
+                    "name": "lockId",
+                    "type": "uint256",
+                    "indexed": true,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "newOwner",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "error",
+            "name": "AddressEmptyCode",
+            "inputs": [
+                {
+                    "name": "target",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "AddressInsufficientBalance",
+            "inputs": [
+                {
+                    "name": "account",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "AlreadyUnlocked",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "FailedInnerCall",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "InvalidAmount",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "InvalidToken",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "LockNotExpired",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "NotOwner",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "SafeERC20FailedOperation",
+            "inputs": [
+                {
+                    "name": "token",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ]
+        }
+    ]
+}

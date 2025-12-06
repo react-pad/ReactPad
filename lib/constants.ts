@@ -1,7 +1,7 @@
+import { maxUint256 } from 'viem';
+
 export const REACT_TOKEN_ADDRESS = "0xe00CBca00d36c89819289dE34e352881E8F475Fd"; // Replace with actual contract address
 export const REACT_TOKEN_PRICE_USD = 0.067; // Mock price
-
-import { maxUint256 } from 'viem';
 
 const uint256Max = maxUint256;
 

@@ -1,58 +1,64 @@
+"use client"
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
+import { TokenFactoryContract } from "@/lib/contracts";
+import Link from "next/link";
+import { erc20Abi } from "viem";
+import { useAccount, useReadContract } from "wagmi";
 
-const participations = [
-  {
-    id: "etherium-nexus",
-    projectName: "Etherium Nexus",
-    amountInvested: 500, // in USD
-    tokenAmount: 2500,
-    tokenSymbol: "ENX",
-    status: "Live",
-  },
-  {
-    id: "cipher-crest",
-    projectName: "CipherCrest",
-    amountInvested: 1200,
-    tokenAmount: 6000,
-    tokenSymbol: "CCX",
-    status: "Completed",
-  },
-];
+function TokenInfo({ tokenAddress }: { tokenAddress: `0x${string}` }) {
+  const { data: token, isLoading } = useReadContract({
+    abi: erc20Abi,
+    address: tokenAddress,
+    functionName: 'symbol'
+  })
+  const { data: name } = useReadContract({
+    abi: erc20Abi,
+    address: tokenAddress,
+    functionName: 'name'
+  })
 
-const transactions = [
-  {
-    id: "txn-1",
-    type: "Invest",
-    description: "Invested in Etherium Nexus",
-    amount: "-500 USDC",
-    timestamp: "2 hours ago",
-  },
-  {
-    id: "txn-2",
-    type: "Swap",
-    description: "Swapped SOL for SNX",
-    amount: "+1,250.5 SNX",
-    timestamp: "1 day ago",
-  },
-  {
-    id: "txn-3",
-    type: "Withdraw",
-    description: "Withdrew staking rewards",
-    amount: "+150 USDC",
-    timestamp: "3 days ago",
-  },
-  {
-    id: "txn-4",
-    type: "Invest",
-    description: "Invested in CipherCrest",
-    amount: "-1200 USDC",
-    timestamp: "1 week ago",
-  },
-];
+
+  if (isLoading) {
+    return <div>Loading token...</div>
+  }
+
+  return (
+    <div className="flex justify-between items-center">
+      <div>
+        <h3 className="font-bold">{name as string} ({token as string})</h3>
+        <p className="text-sm text-gray-500">{tokenAddress}</p>
+      </div>
+      <div className="flex gap-2">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/dashboard/tools/token-locker?token=${tokenAddress}`}>Lock</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/dashboard/tools/airdrop?token=${tokenAddress}`}>Airdrop</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/dashboard/create/presale?token=${tokenAddress}`}>Presale</Link>
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 
 export default function UserDashboardPage() {
+  const { address } = useAccount();
+  const { data: createdTokens, isLoading } = useReadContract({
+    abi: TokenFactoryContract.abi,
+    address: TokenFactoryContract.address,
+    functionName: 'tokensCreatedBy',
+    args: [address as `0x${string}`],
+    query: {
+      enabled: !!address,
+    }
+  });
+
+
   return (
     <div className="container mx-auto px-4 py-12 text-black">
       <section className="mb-12">
@@ -64,51 +70,18 @@ export default function UserDashboardPage() {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-              <CardTitle>Your Participations</CardTitle>
+              <CardTitle>My Created Tokens</CardTitle>
             </CardHeader>
             <CardContent>
-              {participations.length > 0 ? (
+              {isLoading && <p>Loading your tokens...</p>}
+              {createdTokens && createdTokens.length > 0 ? (
                 <div className="space-y-6">
-                  {participations.map((p) => (
-                    <div key={p.id} className="flex justify-between items-center">
-                      <div>
-                        <h3 className="font-bold">{p.projectName}</h3>
-                        <p className="text-sm text-gray-500">
-                          Invested ${p.amountInvested} for {p.tokenAmount} {p.tokenSymbol}
-                        </p>
-                      </div>
-                      <Badge variant={p.status === "Live" ? "default" : "secondary"}>
-                        {p.status}
-                      </Badge>
-                    </div>
+                  {(createdTokens as `0x${string}`[]).map((token) => (
+                    <TokenInfo key={token} tokenAddress={token} />
                   ))}
                 </div>
               ) : (
-                <p>You have not participated in any projects yet.</p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Transaction Feed</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {transactions.length > 0 ? (
-                <div className="space-y-4">
-                  {transactions.map((t) => (
-                    <div key={t.id} className="flex justify-between items-center">
-                      <div>
-                        <span className={`font-bold pr-2 ${t.type === 'Invest' ? 'text-red-500' : 'text-green-500'}`}>{t.type}</span>
-                        <span>{t.description}</span>
-                        <p className="text-xs text-gray-500 pt-1">{t.timestamp}</p>
-                      </div>
-                      <span className="font-mono text-sm">{t.amount}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No recent transactions.</p>
+                <p>You have not created any tokens yet.</p>
               )}
             </CardContent>
           </Card>

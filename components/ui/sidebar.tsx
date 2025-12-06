@@ -4,11 +4,9 @@ import { reactiveMainnet } from "@/lib/web3";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import {
   Coins,
-  Gem,
   LayoutDashboard,
   PlusSquare,
-  Rocket,
-  ThumbsUp
+  Rocket
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,8 +17,6 @@ const navItems = [
   { name: "Dashboard", href: "/dashboard/user", icon: LayoutDashboard },
   { name: "Launchpad", href: "/projects", icon: Rocket },
   { name: "Markets", href: "/markets", icon: Coins },
-  { name: "Staking", href: "/staking", icon: Gem },
-  { name: "Voting", href: "/voting", icon: ThumbsUp },
 ];
 
 export function Sidebar({ children }: { children: React.ReactNode; }) {
