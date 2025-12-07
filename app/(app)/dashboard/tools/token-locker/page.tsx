@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TokenLockerContract } from "@/lib/config";
+import { useLockInfo } from "@/lib/hooks/useLockInfo";
+import { useUserLocks } from "@/lib/hooks/useUserLocks";
 import { formatDistanceToNow } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -12,12 +14,7 @@ import { erc20Abi, maxUint256, parseEther } from "viem";
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 function LockInfo({ lockId }: { lockId: bigint }) {
-    const { data: lock, isLoading, refetch } = useReadContract({
-        abi: TokenLockerContract.abi,
-        address: TokenLockerContract.address,
-        functionName: 'getLock',
-        args: [lockId]
-    });
+    const { lock, isLoading, refetch } = useLockInfo(lockId);
 
     const { data: hash, writeContract } = useWriteContract();
     const { isSuccess: isUnlocked, isLoading: isUnlocking } = useWaitForTransactionReceipt({ hash });
@@ -109,15 +106,7 @@ export default function TokenLockerPage() {
         return allowance < parsedAmount;
     }, [allowance, parsedAmount]);
 
-    const { data: userLocks, isLoading: isLoadingLocks, refetch: refetchLocks } = useReadContract({
-        abi: TokenLockerContract.abi,
-        address: TokenLockerContract.address,
-        functionName: 'locksOfOwner',
-        args: [address as `0x${string}`],
-        query: {
-            enabled: !!address,
-        }
-    });
+    const { lockIds: userLocks, isLoading: isLoadingLocks, refetch: refetchLocks } = useUserLocks();
 
     const handleApprove = () => {
         approve({
@@ -144,23 +133,11 @@ export default function TokenLockerPage() {
         })
     }
 
-    const { isLoading: isApproveConfirming } = useWaitForTransactionReceipt({
+    const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({
         hash: approveHash,
-        onSuccess() {
-            toast.success("Approval successful! You can now lock your tokens.");
-            refetchAllowance();
-        }
     });
-    const { isLoading: isLockConfirming } = useWaitForTransactionReceipt({
+    const { isLoading: isLockConfirming, isSuccess: isLockSuccess } = useWaitForTransactionReceipt({
         hash: lockHash,
-        onSuccess() {
-            toast.success("Tokens locked successfully!");
-            refetchLocks();
-            setAmount("");
-            setDuration("");
-            setName("");
-            setDescription("");
-        }
     });
 
     useEffect(() => {
@@ -180,7 +157,25 @@ export default function TokenLockerPage() {
         if (err) {
             toast.error(err.message);
         }
-    }, [lockError, approveError])
+    }, [lockError, approveError]);
+
+    useEffect(() => {
+        if (isApproveSuccess) {
+            toast.success("Approval successful! You can now lock your tokens.");
+            refetchAllowance();
+        }
+    }, [isApproveSuccess, refetchAllowance]);
+
+    useEffect(() => {
+        if (isLockSuccess) {
+            toast.success("Tokens locked successfully!");
+            refetchLocks();
+            setAmount("");
+            setDuration("");
+            setName("");
+            setDescription("");
+        }
+    }, [isLockSuccess, refetchLocks]);
 
     return (
         <div className="container mx-auto px-4 py-12 text-black">

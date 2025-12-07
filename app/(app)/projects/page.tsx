@@ -1,10 +1,9 @@
 "use client"
 import { Input } from "@/components/ui/input";
 import { PresaleCard } from "@/components/ui/presale-card";
-import { PresaleFactoryContract } from "@/lib/config";
+import { usePresales } from "@/lib/hooks/usePresales";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { useReadContract } from "wagmi";
 
 const statusFilters = [
   { label: "All", value: "all" },
@@ -17,11 +16,7 @@ export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: presales, isLoading } = useReadContract({
-    abi: PresaleFactoryContract.abi,
-    address: PresaleFactoryContract.address,
-    functionName: 'allPresales',
-  });
+  const { presales, isLoading } = usePresales();
 
   // Filtering is not implemented with live data yet.
   // This will require fetching status for each presale and then filtering.

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { MarketCard } from "@/components/ui/market-card";
-import { useMarkets } from "@/lib/hooks/useMarkets";
+import { useCachedMarkets } from "@/lib/hooks/useCachedMarkets";
 
 const filterOptions = [
   { label: "All", value: "all" },
@@ -14,7 +14,7 @@ const filterOptions = [
 export default function MarketsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const { markets, isLoading } = useMarkets();
+  const { markets, isLoading } = useCachedMarkets();
 
   const sortedMarkets = [...markets].sort((a, b) => {
     if (!a || !b) return 0;

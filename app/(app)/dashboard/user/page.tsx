@@ -1,11 +1,10 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { TokenFactoryContract } from "@/lib/config";
+import { useUserTokens } from "@/lib/hooks/useUserTokens";
 import Link from "next/link";
 import { erc20Abi } from "viem";
-import { useAccount, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 
 function TokenInfo({ tokenAddress }: { tokenAddress: `0x${string}` }) {
   const { data: token, isLoading } = useReadContract({
@@ -47,16 +46,7 @@ function TokenInfo({ tokenAddress }: { tokenAddress: `0x${string}` }) {
 
 
 export default function UserDashboardPage() {
-  const { address } = useAccount();
-  const { data: createdTokens, isLoading } = useReadContract({
-    abi: TokenFactoryContract.abi,
-    address: TokenFactoryContract.address,
-    functionName: 'tokensCreatedBy',
-    args: [address as `0x${string}`],
-    query: {
-      enabled: !!address,
-    }
-  });
+  const { tokens: createdTokens, isLoading } = useUserTokens();
 
 
   return (
@@ -98,12 +88,7 @@ export default function UserDashboardPage() {
             <CardContent className="space-y-4">
               <div className="flex justify-between">
                 <span>KYC Status</span>
-                <span className="font-bold text-green-600">Verified</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between">
-                <span>Staking Tier</span>
-                <span className="font-bold">Bronze</span>
+                <span className="font-bold text-yellow-600">Pending</span>
               </div>
             </CardContent>
           </Card>
