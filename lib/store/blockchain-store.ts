@@ -1,7 +1,7 @@
+import { Address } from 'viem';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Types for our cached data
 export interface Market {
   id: string;
   pairAddress: string;
@@ -29,13 +29,13 @@ export interface Market {
 
 export interface TokenLock {
   id: bigint;
-  token: `0x${string}`;
+  token: Address;
   amount: bigint;
   unlockDate: bigint;
   name: string;
   description: string;
   withdrawn: boolean;
-  owner: `0x${string}`;
+  owner: Address;
 }
 
 interface CacheMetadata {
@@ -46,7 +46,7 @@ interface CacheMetadata {
 interface BlockchainStore {
   // User Tokens Cache
   userTokens: Record<string, {
-    tokens: `0x${string}`[];
+    tokens: Address[];
     metadata: CacheMetadata;
   }>;
 
@@ -65,14 +65,14 @@ interface BlockchainStore {
 
   // Presales Cache
   presales: {
-    addresses: `0x${string}`[];
+    addresses: Address[];
     metadata: CacheMetadata;
   };
 
   // Actions for User Tokens
-  setUserTokens: (address: string, tokens: `0x${string}`[]) => void;
+  setUserTokens: (address: string, tokens: Address[]) => void;
   setUserTokensLoading: (address: string, isLoading: boolean) => void;
-  getUserTokens: (address: string) => `0x${string}`[] | null;
+  getUserTokens: (address: string) => Address[] | null;
   isUserTokensStale: (address: string, maxAge?: number) => boolean;
 
   // Actions for User Locks
@@ -91,9 +91,9 @@ interface BlockchainStore {
   isMarketsStale: (maxAge?: number) => boolean;
 
   // Actions for Presales
-  setPresales: (addresses: `0x${string}`[]) => void;
+  setPresales: (addresses: Address[]) => void;
   setPresalesLoading: (isLoading: boolean) => void;
-  getPresales: () => `0x${string}`[] | null;
+  getPresales: () => Address[] | null;
   isPresalesStale: (maxAge?: number) => boolean;
 
   // Clear cache
