@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { NFTFactoryContract } from "@/lib/config";
+import { NFTFactory } from "@/lib/config";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { parseEther } from "viem";
+import { Address, parseEther } from "viem";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 export default function CreateNftPage() {
@@ -53,8 +53,8 @@ export default function CreateNftPage() {
         const args: unknown[] = isETH ? [params] : [params, paymentToken as `0x${string}`];
 
         writeContract({
-            address: NFTFactoryContract.address,
-            abi: NFTFactoryContract.abi,
+            address: NFTFactory.address as Address,
+            abi: NFTFactory.abi,
             functionName,
             args: args as never
         });

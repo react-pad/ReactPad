@@ -2,8 +2,9 @@
 import { Input } from "@/components/ui/input";
 import { PresaleCard } from "@/components/ui/presale-card";
 import { usePresales } from "@/lib/hooks/usePresales";
-import { Search } from "lucide-react";
+import { Search, RefreshCw } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const statusFilters = [
   { label: "All", value: "all" },
@@ -16,7 +17,7 @@ export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { presales, isLoading } = usePresales();
+  const { presales, isLoading, refetch } = usePresales();
 
   // Filtering is not implemented with live data yet.
   // This will require fetching status for each presale and then filtering.
@@ -34,14 +35,23 @@ export default function ProjectsPage() {
         </div>
 
         <div className="mb-16 space-y-6">
-          <div className="relative">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-black w-6 h-6" />
-            <Input
-              placeholder="SEARCH PROJECTS..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-16 w-full h-16 text-lg border-2 border-black focus:ring-0 focus:border-black font-medium uppercase placeholder:text-gray-400"
-            />
+          <div className="flex gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-black w-6 h-6" />
+              <Input
+                placeholder="SEARCH PROJECTS..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-16 w-full h-16 text-lg border-2 border-black focus:ring-0 focus:border-black font-medium uppercase placeholder:text-gray-400"
+              />
+            </div>
+            <Button
+              onClick={refetch}
+              disabled={isLoading}
+              className="h-16 px-6 bg-black text-white border-2 border-black hover:bg-gray-800 font-bold uppercase tracking-wider"
+            >
+              <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+            </Button>
           </div>
           <div className="flex items-center gap-3">
             {statusFilters.map(filter => (

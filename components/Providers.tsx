@@ -8,6 +8,7 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useState } from "react";
@@ -49,7 +50,7 @@ const connectors = connectorsForWallets(
   }
 );
 
-const config = createConfig({
+export const config = createConfig({
   chains: [sepolia],
   connectors,
   transports: {
@@ -65,6 +66,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>{children}</RainbowKitProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </WagmiProvider>
     </ThemeProvider>
